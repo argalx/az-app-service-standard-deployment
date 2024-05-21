@@ -1,0 +1,1 @@
+# az-app-service-standard-deployment
