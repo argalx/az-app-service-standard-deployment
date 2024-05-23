@@ -9,7 +9,7 @@ resource "azurerm_subnet" "subnet" {
 }
 
 # Subnet Network Security Group Association
-resource "azurerm_subnet_network_security_group_association" "subnet-nsg-assoc" {
-    subnet_id = azurerm_subnet.subnet.id
-    network_security_group_id = var.subnet-nsg-assoc-input-nsg-id
-}
+# resource "azurerm_subnet_network_security_group_association" "subnet-nsg-assoc" {
+#     subnet_id = azurerm_subnet.subnet.id
+#     network_security_group_id = var.subnet-nsg-assoc-input-nsg-id
+# }

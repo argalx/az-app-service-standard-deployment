@@ -25,7 +25,7 @@ variable "subnet-input-address_prefixes" {
 }
 
 # Network Security Group ID
-variable "subnet-nsg-assoc-input-nsg-id" {
-    description = "Network security group ID"
-    type = string
-}
+# variable "subnet-nsg-assoc-input-nsg-id" {
+#     description = "Network security group ID"
+#     type = string
+# }
