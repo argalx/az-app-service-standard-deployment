@@ -84,6 +84,7 @@ module "firewall-public-ip" {
     pip-input-location = var.network-module-input-location
 }
 
+# Firewall Policy
 module "firewall-policy" {
     source = "./modules/firewall-policy"
     policy-input-rg-name = var.network-module-input-rg-name
@@ -105,4 +106,11 @@ resource "azurerm_firewall" "firewall" {
         subnet_id = module.firewall-subnet.subnet-out-id
         public_ip_address_id = module.firewall-public-ip.pip-output-id
     }
+}
+
+module "route-table" {
+    source = "./modules/route-table"
+    route-input-rg-name = var.network-module-input-rg-name
+    route-input-location = var.network-module-input-location
+    route-next-next_hop_in_ip_address = "10.0.5.4"
 }
