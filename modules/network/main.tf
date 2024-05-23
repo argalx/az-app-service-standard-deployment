@@ -84,6 +84,12 @@ module "firewall-public-ip" {
     pip-input-location = var.network-module-input-location
 }
 
+module "firewall-policy" {
+    source = "./modules/firewall-policy"
+    policy-input-rg-name = var.network-module-input-rg-name
+    policy-input-location = var.network-module-input-location
+}
+
 # Azure Firewall Resource
 resource "azurerm_firewall" "firewall" {
     name = "agxfirewall"
@@ -91,6 +97,8 @@ resource "azurerm_firewall" "firewall" {
     location = var.network-module-input-location
     sku_name = "AZFW_VNet"
     sku_tier = "Standard"
+
+    firewall_policy_id = module.firewall-policy.policy-output-id
 
     ip_configuration {
         name = "firewall-ip-configuration"
