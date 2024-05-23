@@ -1,11 +1,11 @@
 # Resource definitions
 
 # Network Security Group Resource
-resource "azurerm_network_security_group" "nsg" {
-    name = var.nsg-input-name
-    resource_group_name = var.network-module-input-rg-name
-    location = var.network-module-input-location
-}
+# resource "azurerm_network_security_group" "nsg" {
+#     name = var.nsg-input-name
+#     resource_group_name = var.network-module-input-rg-name
+#     location = var.network-module-input-location
+# }
 
 # Virtual Network Resource
 resource "azurerm_virtual_network" "vnet" {
@@ -23,7 +23,7 @@ module "default-subnet" {
     subnet-input-rg-name = var.network-module-input-rg-name
     subnet-input-vnet-name = azurerm_virtual_network.vnet.name
     subnet-input-address_prefixes = ["10.0.1.0/24"]
-    subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+    # subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
 }
 
 # Azure App Gateway Subnet
@@ -33,7 +33,7 @@ module "app-gateway-subnet" {
     subnet-input-rg-name = var.network-module-input-rg-name
     subnet-input-vnet-name = azurerm_virtual_network.vnet.name
     subnet-input-address_prefixes = ["10.0.2.0/24"]
-    subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+    # subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
 }
 
 # Azure App Service Subnet
@@ -43,7 +43,7 @@ module "app-service-subnet" {
     subnet-input-rg-name = var.network-module-input-rg-name
     subnet-input-vnet-name = azurerm_virtual_network.vnet.name
     subnet-input-address_prefixes = ["10.0.3.0/24"]
-    subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+    # subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
 }
 
 # Azure Cache for Redis Subnet
@@ -53,17 +53,17 @@ module "redis-cache-subnet" {
     subnet-input-rg-name = var.network-module-input-rg-name
     subnet-input-vnet-name = azurerm_virtual_network.vnet.name
     subnet-input-address_prefixes = ["10.0.4.0/24"]
-    subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+    # subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
 }
 
 # Azure Firewall Subnet
 module "firewall-subnet" {
     source = "./modules/subnet"
-    subnet-input-name = "firewall-subnet"
+    subnet-input-name = "AzureFirewallSubnet"
     subnet-input-rg-name = var.network-module-input-rg-name
     subnet-input-vnet-name = azurerm_virtual_network.vnet.name
     subnet-input-address_prefixes = ["10.0.5.0/24"]
-    subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+    # subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
 }
 
 # Private Link Subnet
@@ -73,5 +73,28 @@ module "private-link-subnet" {
     subnet-input-rg-name = var.network-module-input-rg-name
     subnet-input-vnet-name = azurerm_virtual_network.vnet.name
     subnet-input-address_prefixes = ["10.0.6.0/24"]
-    subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+    # subnet-nsg-assoc-input-nsg-id = azurerm_network_security_group.nsg.id
+}
+
+# Firewall Public IP
+module "firewall-public-ip" {
+    source = "./modules/public-ip"
+    pip-input-name = "firewallPip"
+    pip-input-rg-name = var.network-module-input-rg-name
+    pip-input-location = var.network-module-input-location
+}
+
+# Azure Firewall Resource
+resource "azurerm_firewall" "firewall" {
+    name = "agxfirewall"
+    resource_group_name = var.network-module-input-rg-name
+    location = var.network-module-input-location
+    sku_name = "AZFW_VNet"
+    sku_tier = "Standard"
+
+    ip_configuration {
+        name = "firewall-ip-configuration"
+        subnet_id = module.firewall-subnet.subnet-out-id
+        public_ip_address_id = module.firewall-public-ip.pip-output-id
+    }
 }
