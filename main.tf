@@ -14,6 +14,11 @@ module "network-module" {
     source = "./modules/network"
     network-module-input-rg-name = azurerm_resource_group.resource-group1.name
     network-module-input-location = azurerm_resource_group.resource-group1.location
-    nsg-input-name = "agxnsg"
     vnet-input-name = "agxvnet"
+}
+
+module "application-module" {
+    source = "./modules/application"
+    application-module-input-rg-name = azurerm_resource_group.resource-group1.name
+    application-module-input-location = azurerm_resource_group.resource-group1.location
 }
