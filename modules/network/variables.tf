@@ -13,10 +13,10 @@ variable "network-module-input-location" {
 }
 
 # Network Security Group Name
-variable "nsg-input-name" {
-    description = "Name of network security group. Must be unique."
-    type = string
-}
+# variable "nsg-input-name" {
+#     description = "Name of network security group. Must be unique."
+#     type = string
+# }
 
 # Virtual Network Name
 variable "vnet-input-name" {
