@@ -18,3 +18,8 @@ resource "azurerm_windows_web_app" "windows-web-app" {
 
     }
 }
+
+# resource "azurerm_app_service_virtual_network_swift_connection" "windows-web-app-vnet-association" {
+#     app_service_id = azurerm_windows_web_app.windows-web-app.id
+#     subnet_id = var.application-module-input-subnet-id
+# }
